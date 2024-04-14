@@ -1,2 +1,2 @@
-accountId,transactionId,amount,actionTime
-123456789,111111111,50.00,2023-01-01 00:00:01.000
+transactionId,accountId,amount,currency,amountInEur,direction,description
+123456789,111111111,50.00,EUR,50.00,OUT,ABC

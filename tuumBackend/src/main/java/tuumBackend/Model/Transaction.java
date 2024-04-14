@@ -10,8 +10,10 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Transaction {
-    private String accountId;
     private String transactionId;
+    private String accountId;
     private double amount;
-    private Timestamp actionTime;
+    private String currency;
+    private String Direction;
+    private String Description;
 }

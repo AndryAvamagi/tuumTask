@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tuumBackend.Mapper.TransactionsMapper;
+import tuumBackend.Mapper.Mapper;
+import tuumBackend.Model.Customer;
 import tuumBackend.Model.Transaction;
 
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 
 @RestController
@@ -17,11 +17,16 @@ import java.util.ArrayList;
 public class TransactionsController {
 
     @Autowired
-    private TransactionsMapper transactionsMapper;
+    private Mapper Mapper;
 
 
-    @GetMapping("/all")
-    public ResponseEntity<ArrayList<Transaction>> getAll(){
-        return new ResponseEntity<>(transactionsMapper.findAll(), HttpStatus.OK);
+    @GetMapping("/allTransactions")
+    public ResponseEntity<ArrayList<Transaction>> getAllTransactions(){
+        return new ResponseEntity<>(Mapper.findAllTransactions(), HttpStatus.OK);
+    }
+
+    @GetMapping("/allCustomers")
+    public ResponseEntity<ArrayList<Customer>> getAllCustomers(){
+        return new ResponseEntity<>(Mapper.findAllCustomers(), HttpStatus.OK);
     }
 }
