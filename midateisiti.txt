@@ -1,0 +1,34 @@
+iga endpoint eraldi konteinerisse
+ehk teha rakendus mikroteenustega, mitte üks suur monoliitne süsteem, mida ma duplikeerin
+probleem tekib siis kui ma pean suurendama võimsust mingil kindlal endpointil siis suureneb igakord terver rakenduse võrra
+
+
+code with arno testing
+
+https://www.youtube.com/watch?v=Gtq9nBr1Ca0
+
+
+python vahelüli
+https://github.com/katanaml/katana-skipper
+
+
+lua
+https://github.com/AlanWangWP/nginx-rabbitmq
+
+
+Celery? 
+https://medium.com/@miladev95/python-celery-cfff053ba1d1
+
+???????? publish message via http
+https://www.rabbitmq.com/docs/management
+https://stackoverflow.com/questions/32486398/publishing-to-the-default-rabbitmq-exchange-using-the-http-api/32486629#32486629
+
+https://www.rabbitmq.com/docs/management#http-api
+
+
+
+java guides 
+spring boot rabbitmq
+
+
+https://www.youtube.com/watch?v=5kxLeR_YuIk
