@@ -14,6 +14,6 @@ public class Transaction {
     private String accountId;
     private double amount;
     private String currency;
-    private String Direction;
-    private String Description;
+    private String direction;
+    private String description;
 }

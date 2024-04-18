@@ -5,12 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {
-    private String AccountId;
-    private String CustomerId;
-    private ArrayList<Balance> balances;
+    private String accountId;
+    private String customerId;
+    private String country;
 }

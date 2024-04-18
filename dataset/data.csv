@@ -1,2 +1,2 @@
-transactionId,accountId,amount,currency,amountInEur,direction,description
-123456789,111111111,50.00,EUR,50.00,OUT,ABC
+transactionId,accountId,amount,currency,direction,description
+123456789,111111111,50.00,EUR,OUT,ABC

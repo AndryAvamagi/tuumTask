@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Balance {
-    private String type;
-    private double amount;
+    private String accountId;
+    private String currency;
+    private Double totalAmount;
 }
