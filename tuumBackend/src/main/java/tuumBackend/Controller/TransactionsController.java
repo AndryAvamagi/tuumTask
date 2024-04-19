@@ -1,13 +1,14 @@
 package tuumBackend.Controller;
 
+import netscape.javascript.JSObject;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tuumBackend.Mapper.Mapper;
+import tuumBackend.Messages.CustomMessage;
+import tuumBackend.Messages.RabbitmqConfig;
 import tuumBackend.Model.Account;
 import tuumBackend.Model.Balance;
 import tuumBackend.Model.Transaction;
@@ -15,10 +16,15 @@ import tuumBackend.Service.AccountService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
 public class TransactionsController {
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private Mapper mapper;
@@ -68,6 +74,50 @@ public class TransactionsController {
         return new ResponseEntity<>(sum, HttpStatus.OK);
     }
 
+
+    @PostMapping("/publishTransaction")
+    public String publishMessageTransaction(@RequestBody Transaction transaction){
+        CustomMessage message = new CustomMessage(transaction);
+        rabbitTemplate.convertAndSend(
+                RabbitmqConfig.EXCHANGE,
+                RabbitmqConfig.TRANSACTION_ROUTING,
+                message
+                );
+        return "edukas";
+    }
+
+    @PostMapping("/publishAccount")
+    public String publishMessageTransaction(@RequestBody CustomMessage message){
+        rabbitTemplate.convertAndSend(
+                RabbitmqConfig.EXCHANGE,
+                RabbitmqConfig.ACCOUNT_ROUTING,
+                message
+        );
+        return "edukas";
+    }
+
+
+
+    //KORRALIK
+
+
+//    @RequestMapping(
+//            method = RequestMethod.POST,
+//            value = "/applications",
+//            produces = { "application/json" },
+//            consumes = { "application/json" }
+//    )
+//
+//    default ResponseEntity<ApplicationDto> addApplication(@Valid @RequestBody ApplicationDto applicationDto) {
+//
+//
+//    @RequestMapping(
+//        method = RequestMethod.GET,
+//        value = "/applications",
+//        produces = { "application/json" }
+//    )
+//
+//    default ResponseEntity<List<ApplicationDto>> getApplications() {
 
 
 //    @GetMapping("/allCustomers")

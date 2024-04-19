@@ -1,11 +1,9 @@
-package tuumBackend.Model;
+package transactionsConsumer.Model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor

@@ -1,18 +1,19 @@
-package tuumBackend.Service;
+package accountConsumer.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tuumBackend.Mapper.Mapper;
-import tuumBackend.Model.Account;
-import tuumBackend.Model.Balance;
-import tuumBackend.Model.Transaction;
+import accountConsumer.Model.Account;
+import accountConsumer.Model.Balance;
+import accountConsumer.Model.Transaction;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AccountService {
     @Autowired
-    private tuumBackend.Mapper.Mapper mapper;
+    private accountConsumer.Mapper.Mapper mapper;
     private final List<String> ALLOWED_CURRENCIES = Arrays.asList("EUR","SEK","GBP", "USD");
 
     public void createTransaction(String accountId, double amount, String currency, String direction, String description){

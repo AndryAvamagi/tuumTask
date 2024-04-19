@@ -20,5 +20,6 @@ RUN set eux; \
 	rm -rf /var/lib/apt/lists/*; \
 	rabbitmqadmin --version
 
-EXPOSE 15671 15672
+EXPOSE 5672 5672
+EXPOSE 15672 15672
 

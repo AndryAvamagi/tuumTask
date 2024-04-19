@@ -2,6 +2,7 @@ version: '3.7'
 services:
   db:
     image: postgres
+    container_name: postgresContainer
     restart: always
     env_file:
       - .env
@@ -9,6 +10,20 @@ services:
       - ./dataset:/docker-entrypoint-initdb.d
     ports:
       - 6666:5432
+    
+  
+  rabbitmq:
+    build: rabbit/.
+    container_name: rabbitmqContainer
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+
+    
+  
+
+
   
 
   
