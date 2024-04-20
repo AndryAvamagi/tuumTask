@@ -17,11 +17,9 @@ public class MessageListener {
 
     @RabbitListener(queues = RabbitmqConfig.ACCOUNT_QUEUE)
     public void listener(CustomMessage message){
-        Account account = message.getAccount();
-        System.out.println(account + " " + message.getCurrencies());
         accountService.createAccount(
-                account.getCustomerId(),
-                account.getCountry(),
+                message.getCustomerId(),
+                message.getCountry(),
                 message.getCurrencies()
         );
     }

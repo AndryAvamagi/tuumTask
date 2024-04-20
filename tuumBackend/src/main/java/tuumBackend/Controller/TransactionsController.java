@@ -33,6 +33,8 @@ public class TransactionsController {
     private AccountService service;
 
 
+//    ----------------------------------------------------------------------------------------ALL DATA-------------------------------------------------------------------------------------------------------------------
+
     @GetMapping("/allTransactions")
     public ResponseEntity<ArrayList<Transaction>> getAllTransactions(){
         return new ResponseEntity<>(mapper.findAllTransactions(), HttpStatus.OK);
@@ -53,19 +55,7 @@ public class TransactionsController {
     }
 
 
-
-
-    @GetMapping("/testCreatingAccount")
-    public ResponseEntity<String> createAccount(){
-        service.createAccount("4", "Japan", Arrays.asList("EUR", "USD"));
-        return new ResponseEntity<>("OK", HttpStatus.OK);
-    }
-
-    @GetMapping("/testTransaction")
-    public ResponseEntity<String> insertTransaction(){
-        service.createTransaction("d8f32f9f-6cfc-4846-a1cd-0bc073c9a81c", 10.5, "EUR", "IN", "TEST3");
-        return new ResponseEntity<>("OK", HttpStatus.OK);
-    }
+//    ---------------------------------------------------------------------------------TESTING------------------------------------------------------------------------------------------------------------
 
 
     @GetMapping("/testAccountBalance")
@@ -74,31 +64,70 @@ public class TransactionsController {
         return new ResponseEntity<>(sum, HttpStatus.OK);
     }
 
+//    --------------------------------------------------------------------------------------ACCOUNT GET----------------------------------------------------------------------------------------
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/account",
+        produces = { "application/json" }
+    )
+    public ResponseEntity<Account> getAccount(@RequestParam String accountId){
+        Account foundAcc = mapper.findAllAccountById(accountId);
 
-    @PostMapping("/publishTransaction")
-    public String publishMessageTransaction(@RequestBody Transaction transaction){
+        if(foundAcc == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        ArrayList<Balance> foundBalances = mapper.findAllBalancesById(accountId);
+
+        return new ResponseEntity<>(new Account(foundAcc.getAccountId(), foundAcc.getCustomerId(), foundAcc.getCountry(), foundBalances), HttpStatus.OK);
+    }
+
+
+
+
+
+
+//    -------------------------------------------------------------------------------------MESSAGE PUBLISHING------------------------------------------------------------------------------------------------
+
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/publishTransaction"
+    )
+
+    public ResponseEntity<String> publishMessageTransaction(@RequestBody Transaction transaction){
+
+        //TODO CHECK IF OK
+
         CustomMessage message = new CustomMessage(transaction);
         rabbitTemplate.convertAndSend(
                 RabbitmqConfig.EXCHANGE,
                 RabbitmqConfig.TRANSACTION_ROUTING,
                 message
                 );
-        return "edukas";
+        return new ResponseEntity<>("Transaction OK", HttpStatus.OK);
     }
 
-    @PostMapping("/publishAccount")
-    public String publishMessageTransaction(@RequestBody CustomMessage message){
+
+
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/publishAccount"
+    )
+    public ResponseEntity<String> publishMessageAccount(@RequestBody CustomMessage message){
+
+        //TODO CHECK IF VALID
+
         rabbitTemplate.convertAndSend(
                 RabbitmqConfig.EXCHANGE,
                 RabbitmqConfig.ACCOUNT_ROUTING,
                 message
         );
-        return "edukas";
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
 
 
-    //KORRALIK
+    //---------------------------------------------------------------------------------------------------KORRALIK--------------------------------------------------------------------------------------
 
 
 //    @RequestMapping(
@@ -119,6 +148,8 @@ public class TransactionsController {
 //
 //    default ResponseEntity<List<ApplicationDto>> getApplications() {
 
+
+//    --------------------------------------------------------------------------------------------------------------GOOD TO HAVE ---------------------------------------------------------------------------------------
 
 //    @GetMapping("/allCustomers")
 //    public ResponseEntity<ArrayList<Customer>> getAllCustomers(){

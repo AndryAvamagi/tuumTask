@@ -30,7 +30,7 @@ services:
       - db
   
   transactionconsumer:
-    build: transactionConsumer/.
+    build: transactionsConsumer/.
     depends_on:
       - db
     deploy:

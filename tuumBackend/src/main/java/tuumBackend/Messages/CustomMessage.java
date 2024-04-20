@@ -22,23 +22,22 @@ public class CustomMessage {
     private String asString;
     private ArrayList<String> currencies;
 
+    private String customerId;
+    private String Country;
+
     public CustomMessage(Transaction transaction) {
         this.transaction = transaction;
         this.message = UUID.randomUUID().toString();
         this.messageDate = new Date().getTime();
-        //this.asString = transaction.toString() + ",messageId="+message+",date="+messageDate.getTime();
     }
 
-    public CustomMessage(Account account, ArrayList<String> currencies) {
-        this.account = account;
+    public CustomMessage(String customerId, String country, ArrayList<String> currencies) {
+        this.customerId = customerId;
+        this.Country = country;
+        this.currencies = currencies;
         this.message = UUID.randomUUID().toString();
         this.messageDate = new Date().getTime();
-        this.currencies = currencies;
-        //this.asString = account.toString() + ",messageId="+message+",date="+messageDate.getTime();
+
     }
 
-//    @Override
-//    public String toString() {
-//        return asString;
-//    }
 }

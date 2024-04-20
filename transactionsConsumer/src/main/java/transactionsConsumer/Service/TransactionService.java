@@ -17,6 +17,8 @@ public class TransactionService {
     private transactionsConsumer.Mapper.Mapper mapper;
     private static final List<String> ALLOWED_CURRENCIES = Arrays.asList("EUR","SEK","GBP", "USD");
 
+
+
     public void createTransaction(String accountId, double amount, String currency, String direction, String description){
         if(amount < 0.0) return;
         if(!direction.equals("IN") && !direction.equals("OUT")) return;

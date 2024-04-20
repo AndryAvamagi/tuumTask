@@ -13,6 +13,8 @@ import java.util.Arrays;
 @org.apache.ibatis.annotations.Mapper
 public interface Mapper {
 
+
+//    ---------------------------------------------------------------ALL DATA --------------------------------------------------------------------------------
     @Select("select * from transactions")
     ArrayList<Transaction> findAllTransactions();
 
@@ -22,17 +24,14 @@ public interface Mapper {
     @Select("select * from accounts")
     ArrayList<Account> findAllAccounts();
 
-    @Insert("INSERT INTO transactions(transactionid, accountid, amount, currency, direction, description) VALUES (#{transactionId}, #{accountId}, #{amount}, #{currency} ,#{direction}, #{description})")
-    void insertTransaction(Transaction transaction);
+//    ---------------------------------------------------------------SPECIFIED---------------------------------------------------------------------------------------
 
-    @Insert("INSERT INTO accounts(accountid, customerid, country) values (#{accountId}, #{customerId}, #{country})")
-    void insertAccount(Account account);
+    @Select("select * from balances where accountId = #{accountId}")
+    ArrayList<Balance> findAllBalancesById(String accountId);
 
-    @Insert("INSERT INTO Balances(accountid, currency, totalAmount) values (#{accountId}, #{currency}, #{totalAmount})")
-    void insertBalance(Balance balance);
+    @Select("select * from accounts where accountId = #{accountId}")
+    Account findAllAccountById(String accountId);
 
-    @Update("Update balances set totalamount = #{balance.totalAmount} + #{amount} where accountid = #{balance.accountId} and currency = #{balance.currency}")
-    void updateTotalAmount(double amount, Balance balance);
 
     @Select("select distinct currency from transactions where accountid = #{AccountId}")
     ArrayList<String> getAllUsedCurrenciesByAccountId(String AccountId);

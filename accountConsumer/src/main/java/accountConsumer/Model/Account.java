@@ -13,4 +13,11 @@ public class Account {
     private String accountId;
     private String customerId;
     private String country;
+    private ArrayList<Balance> balances;
+
+    public Account(String accountId, String customerId, String country) {
+        this.accountId = accountId;
+        this.customerId = customerId;
+        this.country = country;
+    }
 }
