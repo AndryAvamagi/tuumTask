@@ -17,14 +17,4 @@ public class Transaction {
     private String direction;
     private String description;
 
-    @Override
-    public String toString() {
-        return
-                "transactionId=" + transactionId +
-                ",accountId=" + accountId +
-                ",amount=" + amount +
-                ",currency=" + currency +
-                ",direction=" + direction +
-                ",description=" + description;
-    }
 }

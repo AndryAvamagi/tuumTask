@@ -2,22 +2,49 @@ version: '3.7'
 services:
   db:
     image: postgres
-    container_name: postgresContainer
+    container_name: postgrescontainer
     restart: always
     env_file:
       - .env
     volumes:
       - ./dataset:/docker-entrypoint-initdb.d
     ports:
-      - 6666:5432
+      - 5432:5432
     
   
   rabbitmq:
     build: rabbit/.
-    container_name: rabbitmqContainer
+    container_name: rabbitmqcontainer
     ports:
       - 15672:15672
       - 5672:5672
+    depends_on:
+      - db
+
+  tuumbackend:
+    build: tuumBackend/.
+    container_name: tuumbackendcontainer
+    ports:
+      - 8000:8080
+    depends_on:
+      - db
+  
+  transactionconsumer:
+    build: transactionConsumer/.
+    depends_on:
+      - db
+    deploy:
+      mode: replicated
+      replicas: 3
+    
+  accountconsumer:
+    build: accountConsumer/.
+    depends_on:
+      - db
+    deploy:
+      mode: replicated
+      replicas: 2
+  
 
 
     
