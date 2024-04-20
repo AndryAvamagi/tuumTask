@@ -5,19 +5,19 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import tuumBackend.Mapper.Mapper;
 import tuumBackend.Messages.CustomMessage;
 import tuumBackend.Messages.RabbitmqConfig;
 import tuumBackend.Model.Account;
 import tuumBackend.Model.Balance;
+import tuumBackend.Model.ResponseTransaction;
 import tuumBackend.Model.Transaction;
 import tuumBackend.Service.AccountService;
+//import tuumBackend.Service.AccountService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -30,7 +30,10 @@ public class TransactionsController {
     private Mapper mapper;
 
     @Autowired
-    private AccountService service;
+    private AccountService accountService;
+
+
+
 
 
 //    ----------------------------------------------------------------------------------------ALL DATA-------------------------------------------------------------------------------------------------------------------
@@ -49,10 +52,6 @@ public class TransactionsController {
         return new ResponseEntity<>(mapper.findAllAccounts(), HttpStatus.OK);
     }
 
-    @GetMapping("/allCurrencies")
-    public ResponseEntity<ArrayList<String>> getAllUsedCurrencies(){
-        return new ResponseEntity<>(mapper.getAllUsedCurrenciesByAccountId("ec0061a0-c24c-4976-b92b-d08949e02a53"), HttpStatus.OK);
-    }
 
 
 //    ---------------------------------------------------------------------------------TESTING------------------------------------------------------------------------------------------------------------
@@ -60,7 +59,7 @@ public class TransactionsController {
 
     @GetMapping("/testAccountBalance")
     public ResponseEntity<Double> getBalance(){
-        Double sum = mapper.getBalanceOfAccount("ec0061a0-c24c-4976-b92b-d08949e02a53", "EUR");
+        Double sum = mapper.findBalanceOfAccount("ec0061a0-c24c-4976-b92b-d08949e02a53", "EUR");
         return new ResponseEntity<>(sum, HttpStatus.OK);
     }
 
@@ -83,6 +82,20 @@ public class TransactionsController {
     }
 
 
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/transaction",
+            produces = { "application/json" }
+    )
+    public ResponseEntity<ArrayList<Transaction>> getTransactions(@RequestParam String accountId){
+        Account foundAcc = mapper.findAllAccountById(accountId);
+
+        if(foundAcc == null){
+            return new ResponseEntity<>((ArrayList<Transaction>) Arrays.asList(new Transaction("ACCOUNT NOT FOUND")),HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(mapper.findAllTransactionsById(accountId), HttpStatus.OK);
+    }
 
 
 
@@ -93,18 +106,21 @@ public class TransactionsController {
             method = RequestMethod.POST,
             value = "/publishTransaction"
     )
+    public ResponseEntity<ResponseTransaction> publishMessageTransaction(@RequestBody Transaction transaction){
 
-    public ResponseEntity<String> publishMessageTransaction(@RequestBody Transaction transaction){
+        ResponseTransaction res = accountService.transactionValid(transaction);
 
-        //TODO CHECK IF OK
+        if(res.getAccountId() == null) return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 
         CustomMessage message = new CustomMessage(transaction);
+
         rabbitTemplate.convertAndSend(
                 RabbitmqConfig.EXCHANGE,
                 RabbitmqConfig.TRANSACTION_ROUTING,
                 message
                 );
-        return new ResponseEntity<>("Transaction OK", HttpStatus.OK);
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
 
@@ -115,13 +131,14 @@ public class TransactionsController {
     )
     public ResponseEntity<String> publishMessageAccount(@RequestBody CustomMessage message){
 
-        //TODO CHECK IF VALID
+        if(!accountService.currenciesValid(message.getCurrencies())) return new ResponseEntity<>("Currencies not valid", HttpStatus.BAD_REQUEST);
 
         rabbitTemplate.convertAndSend(
                 RabbitmqConfig.EXCHANGE,
                 RabbitmqConfig.ACCOUNT_ROUTING,
                 message
         );
+
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 

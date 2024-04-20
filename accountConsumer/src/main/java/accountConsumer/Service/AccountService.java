@@ -14,6 +14,7 @@ import java.util.UUID;
 public class AccountService {
     @Autowired
     private accountConsumer.Mapper.Mapper mapper;
+
     private final List<String> ALLOWED_CURRENCIES = Arrays.asList("EUR","SEK","GBP", "USD");
 
     public void createTransaction(String accountId, double amount, String currency, String direction, String description){

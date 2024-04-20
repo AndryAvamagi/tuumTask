@@ -8,7 +8,7 @@ import accountConsumer.Model.Balance;
 import accountConsumer.Model.Transaction;
 
 @org.apache.ibatis.annotations.Mapper
-public interface Mapper {
+public interface  Mapper {
 
     @Insert("INSERT INTO transactions(transactionid, accountid, amount, currency, direction, description) VALUES (#{transactionId}, #{accountId}, #{amount}, #{currency} ,#{direction}, #{description})")
     void insertTransaction(Transaction transaction);

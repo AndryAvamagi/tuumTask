@@ -1,25 +1,22 @@
 package tuumBackend.Model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class Transaction {
-    private String transactionId;
+public class ResponseTransaction {
     private String accountId;
     private double amount;
     private String currency;
     private String direction;
     private String description;
+    private double newAmount;
 
-    public Transaction(String description) {
+    public ResponseTransaction(String description) {
         this.description = description;
     }
 }

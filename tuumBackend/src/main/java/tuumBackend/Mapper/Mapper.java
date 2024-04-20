@@ -32,15 +32,18 @@ public interface Mapper {
     @Select("select * from accounts where accountId = #{accountId}")
     Account findAllAccountById(String accountId);
 
+    @Select("select * from transactions where accountid = #{accountId}")
+    ArrayList<Transaction> findAllTransactionsById(String accountId);
 
-    @Select("select distinct currency from transactions where accountid = #{AccountId}")
-    ArrayList<String> getAllUsedCurrenciesByAccountId(String AccountId);
+
+    @Select("select distinct currency from transactions where accountid = #{accountId}")
+    ArrayList<String> findAllUsedCurrenciesByAccountId(String accountId);
 
     @Select("SELECT sum(amount) from transactions where accountid = #{AccountId} and currency = #{currency} group by currency")
-    Double getBalanceOfAccount(String AccountId, String currency);
+    Double findBalanceOfAccount(String AccountId, String currency);
 
     @Select("Select * from balances where accountId = #{accountId} and currency = #{currency} limit 1")
-    Balance getBalance(String accountId, String currency);
+    Balance findBalance(String accountId, String currency);
 
 //    @Select("select * from customers")
 //    ArrayList<Customer> findAllCustomers();

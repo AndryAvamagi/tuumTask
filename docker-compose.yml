@@ -35,7 +35,7 @@ services:
       - db
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 1
     
   accountconsumer:
     build: accountConsumer/.
@@ -43,7 +43,7 @@ services:
       - db
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
   
 
 
