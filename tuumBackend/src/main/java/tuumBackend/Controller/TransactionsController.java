@@ -3,9 +3,11 @@ package tuumBackend.Controller;
 import netscape.javascript.JSObject;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tuumBackend.Mapper.Mapper;
 import tuumBackend.Messages.CustomMessage;
@@ -18,6 +20,7 @@ import tuumBackend.Service.AccountService;
 //import tuumBackend.Service.AccountService;
 
 import java.util.*;
+
 
 @RestController
 @RequestMapping("/api")
@@ -39,6 +42,7 @@ public class TransactionsController {
 //    ----------------------------------------------------------------------------------------ALL DATA-------------------------------------------------------------------------------------------------------------------
 
     @GetMapping("/allTransactions")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ArrayList<Transaction>> getAllTransactions(){
         return new ResponseEntity<>(mapper.findAllTransactions(), HttpStatus.OK);
     }
@@ -47,14 +51,11 @@ public class TransactionsController {
         return new ResponseEntity<>(mapper.findAllBalances(), HttpStatus.OK);
     }
 
-    @GetMapping("/allAccounts")
-    public ResponseEntity<ArrayList<Account>> getAllAccounts(){
-        return new ResponseEntity<>(mapper.findAllAccounts(), HttpStatus.OK);
-    }
 
 
 
 //    ---------------------------------------------------------------------------------TESTING------------------------------------------------------------------------------------------------------------
+
 
 
     @GetMapping("/testAccountBalance")
@@ -63,12 +64,28 @@ public class TransactionsController {
         return new ResponseEntity<>(sum, HttpStatus.OK);
     }
 
-//    --------------------------------------------------------------------------------------ACCOUNT GET----------------------------------------------------------------------------------------
+    //    --------------------------------------------------------------------------------------ACCOUNT GET----------------------------------------------------------------------------------------
+
+
+    @GetMapping("/allAccounts")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ArrayList<Account>> getAllAccounts(){
+        return new ResponseEntity<>(mapper.findAllAccounts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/allAccountIds")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ArrayList<String>> getAllAccountIds(){
+        return new ResponseEntity<>(mapper.findAllAccountIds(), HttpStatus.OK);
+    }
+
+
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/account",
         produces = { "application/json" }
     )
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Account> getAccount(@RequestParam String accountId){
         Account foundAcc = mapper.findAllAccountById(accountId);
 
@@ -87,11 +104,14 @@ public class TransactionsController {
             value = "/transaction",
             produces = { "application/json" }
     )
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ArrayList<Transaction>> getTransactions(@RequestParam String accountId){
         Account foundAcc = mapper.findAllAccountById(accountId);
 
         if(foundAcc == null){
-            return new ResponseEntity<>((ArrayList<Transaction>) Arrays.asList(new Transaction("ACCOUNT NOT FOUND")),HttpStatus.NOT_FOUND);
+            ArrayList<Transaction> temp = new ArrayList<>();
+            temp.add(new Transaction("ACCOUNT NOT FOUND"));
+            return new ResponseEntity<>(temp,HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(mapper.findAllTransactionsById(accountId), HttpStatus.OK);
@@ -106,7 +126,8 @@ public class TransactionsController {
             method = RequestMethod.POST,
             value = "/publishTransaction"
     )
-    public ResponseEntity<ResponseTransaction> publishMessageTransaction(@RequestBody Transaction transaction){
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ResponseTransaction> publishMessageTransaction(@RequestBody @Validated Transaction transaction){
 
         ResponseTransaction res = accountService.transactionValid(transaction);
 
@@ -129,7 +150,8 @@ public class TransactionsController {
             method = RequestMethod.POST,
             value = "/publishAccount"
     )
-    public ResponseEntity<String> publishMessageAccount(@RequestBody CustomMessage message){
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<String> publishMessageAccount(@RequestBody @Validated CustomMessage message){
 
         if(!accountService.currenciesValid(message.getCurrencies())) return new ResponseEntity<>("Currencies not valid", HttpStatus.BAD_REQUEST);
 

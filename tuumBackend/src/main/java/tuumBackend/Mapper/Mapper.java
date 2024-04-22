@@ -13,7 +13,6 @@ import java.util.Arrays;
 @org.apache.ibatis.annotations.Mapper
 public interface Mapper {
 
-
 //    ---------------------------------------------------------------ALL DATA --------------------------------------------------------------------------------
     @Select("select * from transactions")
     ArrayList<Transaction> findAllTransactions();
@@ -23,6 +22,9 @@ public interface Mapper {
 
     @Select("select * from accounts")
     ArrayList<Account> findAllAccounts();
+
+    @Select("select distinct accountId from accounts")
+    ArrayList<String> findAllAccountIds();
 
 //    ---------------------------------------------------------------SPECIFIED---------------------------------------------------------------------------------------
 

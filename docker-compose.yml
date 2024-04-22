@@ -28,11 +28,13 @@ services:
       - 8000:8080
     depends_on:
       - db
+      - rabbitmq
   
   transactionconsumer:
     build: transactionsConsumer/.
     depends_on:
       - db
+      - rabbitmq
     deploy:
       mode: replicated
       replicas: 1
@@ -41,10 +43,29 @@ services:
     build: accountConsumer/.
     depends_on:
       - db
+      - rabbitmq
     deploy:
       mode: replicated
       replicas: 1
+  next:
+    container_name: next
+    image: nextapp
+    build:
+      context: ./tuumfrontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+      - rabbitmq
   
+  nginxapp:
+    container_name: nginx
+    image: nginxapp:1.0.0
+    build:
+      dockerfile: nginx.dockerfile
+    depends_on:
+      - db
+      - rabbitmq
 
 
     
