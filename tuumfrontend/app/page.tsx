@@ -20,17 +20,13 @@ import {
   TextField,
 } from "@mui/material";
 
-import { Box, ThemeProvider, createTheme } from "@mui/system";
 import ControlledCheckbox from "./components/ControlledCheckbox";
 
+
+//USED MAINLY MUI LIBRARY FOR FASTER DEVELOPMENT
+
 export default function Home() {
-  const theme = createTheme({
-    palette: {
-      background: {
-        gray: "#009688",
-      },
-    },
-  });
+  
 
   const defURL = "http://localhost:8000/api";
 
@@ -98,6 +94,7 @@ export default function Home() {
 
   const [curBalances, setCurBalances] = useState<balance[]>();
 
+  //this is for the currency checkbox, remembering with what currency does the user want to create the balances
   function handleGenreFilterChange(cur: string) {
     if (filteredCurrencies.includes(cur)) {
       if (filteredCurrencies.length === 1) {
@@ -115,6 +112,8 @@ export default function Home() {
     console.log(filteredCurrencies);
   }
 
+
+  //Getting all transactions
   async function updateTransactions() {
     const res = await fetch(`${defURL}/allTransactions`, {
       method: "GET",
@@ -148,6 +147,8 @@ export default function Home() {
     setIsLoading(false);
   }
 
+
+  //Get all currencies from the given account object. return string[]
   function getAllCurrenciesFromFullAccount(account: fullAccount) {
     if (!account) {
       return [];
@@ -160,11 +161,12 @@ export default function Home() {
     return curCurrencies;
   }
 
+
+   // when opening the transactions and balance modal -------------------------------------------------------------------------------------------------------------------------------------------
   const handleNewTransactionModalOpen = async (accountId: string) => {
     setTransactionAccountId(accountId);
     setNewTransactionModal(true);
     const req1 = `${defURL}/account?accountId=${accountId}`;
-    // const req2 = `${defURL}/transaction?accountId=${accountId}`
 
     const res = await fetch(req1, {
       method: "GET",
@@ -184,6 +186,7 @@ export default function Home() {
     });
   };
 
+   // account creating, sending a post request-------------------------------------------------------------------------------------------------------------------------------------------
   const handleAccountCreate = async () => {
     if (filteredCurrencies.length === 0) {
       setNewAccountResponseMessage("NO CURRENCIES SELECTED TRY AGAIN");
@@ -209,6 +212,7 @@ export default function Home() {
       currencies: filteredCurrencies,
     };
 
+    //ACCOUNT CREATION REQUEST
     const reqUrl = `${defURL}/publishAccount`;
     const res = await fetch(reqUrl, {
       method: "POST",
@@ -225,6 +229,7 @@ export default function Home() {
     });
   };
 
+  // send post request to backend to create transaction-------------------------------------------------------------------------------------------------------------------------------------------
   const handleTransaction = async () => {
     const submitData: sendTransaction = {
       accountId: transactionAccountId,
@@ -257,6 +262,7 @@ export default function Home() {
       return;
     }
 
+    //TRANSACTION REQUEST
     const reqUrl = `${defURL}/publishTransaction`;
     const res = await fetch(reqUrl, {
       method: "POST",
@@ -265,19 +271,20 @@ export default function Home() {
         "Content-Type": "application/json",
       },
     });
-
+//RESPONSE
     res.json().then((result: transaction) => {
       if (result.accountId === null) {
         setNewAccountResponseMessage(result.description);
       } else {
         setNewAccountResponseMessage("OK");
-        location.reload()
+        location.reload();
       }
     });
   };
 
+
+   // with each load of the webpage run this
   useEffect(() => {
-    setIsLoading(true);
     updateTransactions();
   }, []);
 
@@ -288,6 +295,7 @@ export default function Home() {
       </div> */}
       <div className="flex w-screen h-[10vh] pb-12 px-12"></div>
       <div className="flex w-screen h-[90vh] pb-12 px-12 justify-center items-center">
+        {/* ------------------------------------------------------------------------------------------------------ ACCOUNT CREATING MODAL ----------------------------------------------------------------------------- */}
         <Modal
           className="w-screen h-screen flex justify-center items-center px-36 py-20"
           open={newAccountModal}
@@ -348,6 +356,7 @@ export default function Home() {
             </div>
           </div>
         </Modal>
+        {/* ------------------------------------------------------------------------------------------------------ TRANSACTION CREATING AND BALANCE MODAL ----------------------------------------------------------------------------- */}
         <Modal
           className="w-screen h-screen flex justify-center items-center px-12 py-10"
           open={newTransactionModal}
@@ -362,9 +371,11 @@ export default function Home() {
             ) : (
               <div className="flex w-full h-full">
                 <div className="flex flex-col p-8 w-1/2 items-center justify-center">
-                <div className="mb-2">{transactionAccountId}</div>
+                  <div className="mb-2">{transactionAccountId}</div>
                   <div className="flex mb-4">
                     <div className="mx-4">
+
+                      {/* radio group for currencies */}
                       <RadioGroup
                         value={transactionCurrency}
                         onChange={(
@@ -387,6 +398,7 @@ export default function Home() {
                       </RadioGroup>
                     </div>
 
+                        {/* radio group for transaction direction */}
                     <div>
                       <RadioGroup
                         value={transactionDirection || "IN"}
@@ -422,6 +434,7 @@ export default function Home() {
                     />
                   </div>
 
+                      {/* AMOUNT INSERT */}
                   <div className="ml-4 mb-4">
                     <TextField
                       onKeyPress={(e) => {
@@ -451,9 +464,7 @@ export default function Home() {
                 </div>
 
                 <div className="w-1/2 border h-full p-4">
-                  
                   <div className="h-1/6 w-full p-4 flex justify-evenly items-center">
-                    
                     {curBalances?.map((balance: balance) => (
                       <div key={Math.random()}>
                         {balance.currency + " : " + balance.totalAmount}{" "}
@@ -462,68 +473,81 @@ export default function Home() {
                   </div>
 
                   <div className="w-full h-5/6 border overflow-auto">
-                    {transactions.map((element: transaction) => (
-                       element.amount === 0.0 || element.accountId !== transactionAccountId ? <></> :
-                      <div
-                        key={Math.random()}
-                        className="text-sm pb-1 min-w-[400px]"
-                      >
-                        <Accordion sx={{ bgcolor: "#E0DEDE" }}>
-                          <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
-                            <div className="flex justify-between items-center w-full">
-                              <div>{element.accountId}</div>
-                              <div className="flex items-center">
-                                <div
-                                  className={classNames("text-green-600", {
-                                    "text-red-600": element.direction === "OUT",
-                                  })}
-                                >
-                                  {element.amount}
+                    {transactions.map((element: transaction) =>
+                      element.amount === 0.0 ||
+                      element.accountId !== transactionAccountId ? (
+                        <></>
+                      ) : (
+                        <div
+                          key={Math.random()}
+                          className="text-sm pb-1 min-w-[400px]"
+                        >
+                          {/* DISPLAYING ALL TRANSACTIONS FROM THIS ACCOUNTID */}
+                          <Accordion sx={{ bgcolor: "#E0DEDE" }}>
+                            <AccordionSummary
+                              expandIcon={<ArrowDownwardIcon />}
+                            >
+                              <div className="flex justify-between items-center w-full">
+                                <div>{element.accountId}</div>
+                                <div className="flex items-center">
+                                  <div
+                                    className={classNames("text-green-600", {
+                                      "text-red-600":
+                                        element.direction === "OUT",
+                                    })}
+                                  >
+                                    {element.amount}
+                                  </div>
+                                  <div className="ml-1">{element.currency}</div>
                                 </div>
-                                <div className="ml-1">{element.currency}</div>
                               </div>
-                            </div>
-                          </AccordionSummary>
-                          <AccordionDetails className="text-xs">
-                            TRANSACTION ID : {element.transactionId + " |  "}
-                            DESCRIPTION : {element.description}
-                          </AccordionDetails>
-                        </Accordion>
-                      </div>
-                    ))}
+                            </AccordionSummary>
+                            <AccordionDetails className="text-xs">
+                              TRANSACTION ID : {element.transactionId + " |  "}
+                              DESCRIPTION : {element.description}
+                            </AccordionDetails>
+                          </Accordion>
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
             )}
           </div>
         </Modal>
+
+        {/* ------------------------------------------------------------------------------------------------------ MAIN PAGE ----------------------------------------------------------------------------- */}
         <div className="w-2/3 h-full border overflow-y-auto">
-          {transactions.map((element: transaction) => (
-            element.amount === 0.0 ? <></> :
-            <div key={Math.random()} className="text-sm pb-1 min-w-[400px]">
-              <Accordion sx={{ bgcolor: "#E0DEDE" }}>
-                <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
-                  <div className="flex justify-between items-center w-full">
-                    <div>{element.accountId}</div>
-                    <div className="flex items-center">
-                      <div
-                        className={classNames("text-green-600", {
-                          "text-red-600": element.direction === "OUT",
-                        })}
-                      >
-                        {element.amount}
+          {transactions.map((element: transaction) =>
+            element.amount === 0.0 ? (
+              <></>
+            ) : (
+              <div key={Math.random()} className="text-sm pb-1 min-w-[400px]">
+                <Accordion sx={{ bgcolor: "#E0DEDE" }}>
+                  <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
+                    <div className="flex justify-between items-center w-full">
+                      <div>{element.accountId}</div>
+                      <div className="flex items-center">
+                        <div
+                          className={classNames("text-green-600", {
+                            "text-red-600": element.direction === "OUT",
+                          })}
+                        >
+                          {element.amount}
+                        </div>
+                        <div className="ml-1">{element.currency}</div>
                       </div>
-                      <div className="ml-1">{element.currency}</div>
                     </div>
-                  </div>
-                </AccordionSummary>
-                <AccordionDetails className="text-xs">
-                  TRANSACTION ID : {element.transactionId + " |  "}
-                  DESCRIPTION : {element.description}
-                </AccordionDetails>
-              </Accordion>
-            </div>
-          ))}
+                  </AccordionSummary>
+                  <AccordionDetails className="text-xs">
+                    TRANSACTION ID : {element.transactionId + " |  "}
+                    DESCRIPTION : {element.description}
+                  </AccordionDetails>
+                </Accordion>
+              </div>
+            )
+          )}
         </div>
         <div className="w-1/3 h-full flex flex-col">
           <div className="w-full h-1/4 p-6 min-w-[380px]">

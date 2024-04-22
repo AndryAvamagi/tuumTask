@@ -37,7 +37,7 @@ services:
       - rabbitmq
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 3
     
   accountconsumer:
     build: accountConsumer/.
@@ -46,7 +46,7 @@ services:
       - rabbitmq
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 3
   next:
     container_name: next
     image: nextapp

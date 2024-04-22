@@ -1,8 +1,7 @@
 package tuumBackend.Model;
 
 public class Rate {
-    //13 aprill seisuga
-
+    //13 thought i needed this, did not. Good to have. This data was recorded on the 13. april
     public static final double EUR_TO_SEK= 0.86;
     public static final double EUR_TO_GBP= 11.61;
     public static final double EUR_TO_USD= 1.07;

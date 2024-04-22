@@ -54,25 +54,23 @@ public class TransactionsController {
 
 
 
-//    ---------------------------------------------------------------------------------TESTING------------------------------------------------------------------------------------------------------------
-
-
-
-    @GetMapping("/testAccountBalance")
-    public ResponseEntity<Double> getBalance(){
-        Double sum = mapper.findBalanceOfAccount("ec0061a0-c24c-4976-b92b-d08949e02a53", "EUR");
-        return new ResponseEntity<>(sum, HttpStatus.OK);
-    }
-
     //    --------------------------------------------------------------------------------------ACCOUNT GET----------------------------------------------------------------------------------------
 
 
+    /**
+     *
+     * @return all accounts
+     */
     @GetMapping("/allAccounts")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ArrayList<Account>> getAllAccounts(){
         return new ResponseEntity<>(mapper.findAllAccounts(), HttpStatus.OK);
     }
 
+    /**
+     *
+     * @return all account id's as strings
+     */
     @GetMapping("/allAccountIds")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ArrayList<String>> getAllAccountIds(){
@@ -80,6 +78,11 @@ public class TransactionsController {
     }
 
 
+    /**
+     *
+     * @param accountId
+     * @return all accounts with the id of accountId
+     */
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/account",
@@ -99,6 +102,11 @@ public class TransactionsController {
     }
 
 
+    /**
+     *
+     * @param accountId
+     * @return all transactions by the account
+     */
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/transaction",
@@ -122,6 +130,11 @@ public class TransactionsController {
 
 //    -------------------------------------------------------------------------------------MESSAGE PUBLISHING------------------------------------------------------------------------------------------------
 
+    /**
+     * all requests are forwarded into the transaction queue via exchange
+     * @param transaction
+     * @return http status
+     */
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/publishTransaction"
@@ -145,7 +158,11 @@ public class TransactionsController {
     }
 
 
-
+    /**
+     * all requests are forwarded into the account queue
+     * @param message
+     * @return http status
+     */
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/publishAccount"

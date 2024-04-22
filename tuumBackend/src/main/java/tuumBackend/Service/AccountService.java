@@ -16,6 +16,12 @@ public class AccountService {
 
     private final List<String> ALLOWED_CURRENCIES = Arrays.asList("EUR","SEK","GBP", "USD");
 
+
+    /**
+     * validate the currency
+     * @param givenCurrencies
+     * @return
+     */
     public boolean currenciesValid(ArrayList<String> givenCurrencies){
         for (String currency : givenCurrencies){
             if(!ALLOWED_CURRENCIES.contains(currency)) return false;
@@ -24,6 +30,11 @@ public class AccountService {
     }
 
 
+    /**
+     * Validates the transaction
+     * @param transaction transaction that needs validating
+     * @return returns a responseTransaction class with same data as given Transaction, when the transaction was valid. If not return a ResponseTransaction object that each has all values null except the description
+     */
     public ResponseTransaction transactionValid(Transaction transaction){
         String accountId = transaction.getAccountId();
         double amount = transaction.getAmount();

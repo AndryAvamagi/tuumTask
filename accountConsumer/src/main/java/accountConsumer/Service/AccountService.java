@@ -30,6 +30,13 @@ public class AccountService {
         mapper.insertTransaction(transaction);
     }
 
+
+    /**
+     * Creates account
+     * @param customerId
+     * @param country
+     * @param currencies
+     */
     public void createAccount(String customerId, String country, List<String> currencies){
         String accountId = UUID.randomUUID().toString();
 
@@ -43,6 +50,8 @@ public class AccountService {
         Account account = new Account(accountId, customerId, country);
         mapper.insertAccount(account);
 
+
+//        with each currency creates a base transaction for the Balance making the application logic simpler
         for(String currency : currencies){
             mapper.insertBalance(new Balance(accountId, currency, 0.0));
             createTransaction(accountId, 0.0, currency, "IN", "CREATED ACCOUNT");

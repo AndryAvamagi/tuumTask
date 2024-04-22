@@ -18,7 +18,14 @@ public class TransactionService {
     private static final List<String> ALLOWED_CURRENCIES = Arrays.asList("EUR","SEK","GBP", "USD");
 
 
-
+    /**
+     * Creates transactions from the received data and inserts into the database
+     * @param accountId
+     * @param amount
+     * @param currency
+     * @param direction
+     * @param description
+     */
     public void createTransaction(String accountId, double amount, String currency, String direction, String description){
         if(amount < 0.0) return;
         if(!direction.equals("IN") && !direction.equals("OUT")) return;

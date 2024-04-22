@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * RABBIT configuration, exhange and 2 queues with bindings
+ */
 @Configuration
 public class RabbitmqConfig {
     public static String TRANSACTION_QUEUE = "transaction_queue";

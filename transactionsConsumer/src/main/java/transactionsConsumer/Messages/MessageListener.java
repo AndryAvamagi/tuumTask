@@ -10,9 +10,15 @@ import transactionsConsumer.Service.TransactionService;
 @Component
 public class MessageListener {
 
+
+
     @Autowired
     private TransactionService transactionService;
 
+    /**
+     * Listens to the transactions queue and completes jobs - createTransaction
+     * @param message
+     */
     @RabbitListener(queues = RabbitmqConfig.TRANSACTION_QUEUE)
     public void listener(CustomMessage message){
         Transaction transaction = message.getTransaction();
