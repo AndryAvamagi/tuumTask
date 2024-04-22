@@ -12,7 +12,7 @@ Change the directory
   cd tuumTask/
 ```
 
-Run this command in the correct directory
+Make sure you have docker running and run this command in the correct directory
 ```bash
   docker-compose up -d --no-deps --build
 ```
