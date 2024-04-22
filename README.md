@@ -66,4 +66,4 @@ To horizonyally scale we need to make sure that the appilcation...
 
 - has a service discovery mechanism to dynamically discover and route requests to available instances of your application. This allows new instances to be added or removed without changing it manually.
 
-- has fault tolerance. It is very unlikely that the application will run perfectly 100% of the time. We need to make sure that errors wont break the whole system. This also includes testing your application during varios load conditions. 
+- has fault tolerance. It is very unlikely that the application will run perfectly 100% of the time. We need to make sure that errors wont break the whole system. This also includes testing your application during various load conditions. 
