@@ -14,7 +14,7 @@ Change the directory
 
 Make sure you have docker running and run this command in the correct directory
 ```bash
-  docker-compose up -d --no-deps --build
+  docker-compose up -d 
 ```
 When the containers have started, open localhost:3000 in your browser
 
