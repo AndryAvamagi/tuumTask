@@ -18,6 +18,8 @@ Make sure you have docker running and run this command in the correct directory
 ```
 When the containers have started, open localhost:3000 in your browser
 
+(THIS UPDATE IS AFTER THE DEADLINE : please make sure to build the gradle projects, because the build directory is not included in git)
+
 ## Explanation of important choices in your solution
 
 At first I needed to think about the structure of the database. With relational databases there is a general rule that we should avoid
